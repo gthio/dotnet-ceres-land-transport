@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ceres.Gateway", "..\..\90 Src\Ceres.Gateway\Ceres.Gateway.csproj", "{A956B9B1-93C5-4E2F-84E4-2663288F0A30}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Ceres.Runner", "..\..\91 SrcTest\Test.Ceres.Runner\Test.Ceres.Runner.csproj", "{1496A014-0CB1-4C17-9A0C-DCA007DEFC7D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A956B9B1-93C5-4E2F-84E4-2663288F0A30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A956B9B1-93C5-4E2F-84E4-2663288F0A30}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A956B9B1-93C5-4E2F-84E4-2663288F0A30}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A956B9B1-93C5-4E2F-84E4-2663288F0A30}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1496A014-0CB1-4C17-9A0C-DCA007DEFC7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1496A014-0CB1-4C17-9A0C-DCA007DEFC7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1496A014-0CB1-4C17-9A0C-DCA007DEFC7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1496A014-0CB1-4C17-9A0C-DCA007DEFC7D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

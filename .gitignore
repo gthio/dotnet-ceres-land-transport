@@ -1,0 +1,9 @@
+95 Solution/*/packages/
+95 Solution/*/*.suo
+95 Solution/*/*.gpState
+90 Src/*/obj/
+90 Src/*/bin
+91 SrcTest/*/bin/
+91 SrcTest/*/obj/
+9s BuildOutput/
+92 Library/
