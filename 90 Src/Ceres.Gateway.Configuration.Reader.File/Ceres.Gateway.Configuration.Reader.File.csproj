@@ -4,16 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{1496A014-0CB1-4C17-9A0C-DCA007DEFC7D}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{5EF29608-1F82-4335-9C34-D33954C7BB01}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Test.Ceres.Runner</RootNamespace>
-    <AssemblyName>Test.Ceres.Runner</AssemblyName>
+    <RootNamespace>Ceres.Gateway.Configuration.Reader.File</RootNamespace>
+    <AssemblyName>Ceres.Gateway.Configuration.Reader.File</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -34,32 +32,16 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="FileConfigurationReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\90 Src\Ceres.Gateway.Configuration.Reader.File\Ceres.Gateway.Configuration.Reader.File.csproj">
-      <Project>{5ef29608-1f82-4335-9c34-d33954c7bb01}</Project>
-      <Name>Ceres.Gateway.Configuration.Reader.File</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\90 Src\Ceres.Gateway.Configuration.Reader\Ceres.Gateway.Configuration.Reader.csproj">
+    <ProjectReference Include="..\Ceres.Gateway.Configuration.Reader\Ceres.Gateway.Configuration.Reader.csproj">
       <Project>{fec76b4a-1aca-4e49-8c78-4c3fc7994ad1}</Project>
       <Name>Ceres.Gateway.Configuration.Reader</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\90 Src\Ceres.Gateway.Configuration\Ceres.Gateway.Configuration.csproj">
-      <Project>{5b038008-9ea4-4715-a582-458c6823853a}</Project>
-      <Name>Ceres.Gateway.Configuration</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\90 Src\Ceres.Gateway\Ceres.Gateway.csproj">
-      <Project>{a956b9b1-93c5-4e2f-84e4-2663288f0a30}</Project>
-      <Name>Ceres.Gateway</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

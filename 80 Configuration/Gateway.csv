@@ -1,0 +1,10 @@
+REMOTE_CODE,TYPE,KEY_VALUE
+LTA,URL,,http://datamall.mytransport.sg/ltaodataservice.svc/
+LTA,HEADER,AccountKey,?
+LTA,HEADER,UniqueUserID,?
+LTA,HEADER,accept,application/json
+GOOGLE,URL,,
+GOOGLE,QUERY_STRING,key,?
+MAPBOX,URL,,
+MAPBOX,HEADER,Content-Type,application/json
+MAPBOX,QUERY_STRING,access_token,?
