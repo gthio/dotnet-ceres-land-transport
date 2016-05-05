@@ -32,6 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\95 Solution\Ceres\packages\Newtonsoft.Json.8.0.3\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -61,6 +64,13 @@
       <Project>{a956b9b1-93c5-4e2f-84e4-2663288f0a30}</Project>
       <Name>Ceres.Gateway</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\90 Src\Ceres\Ceres.csproj">
+      <Project>{7ab0e318-208e-4738-bb24-277c0799ae24}</Project>
+      <Name>Ceres</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
