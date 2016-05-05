@@ -3,6 +3,10 @@ LTA,URL,,http://datamall.mytransport.sg/ltaodataservice.svc/
 LTA,HEADER,AccountKey,?
 LTA,HEADER,UniqueUserID,?
 LTA,HEADER,accept,application/json
+LTA2,URL,,http://datamall2.mytransport.sg/ltaodataservice/
+LTA2,HEADER,AccountKey,?
+LTA2,HEADER,UniqueUserID,?
+LTA2,HEADER,accept,application/json
 GOOGLE,URL,,
 GOOGLE,QUERY_STRING,key,?
 MAPBOX,URL,,
