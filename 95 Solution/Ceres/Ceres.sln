@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ceres.Gateway.Configuration
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ceres.Gateway.Configuration.Reader.File", "..\..\90 Src\Ceres.Gateway.Configuration.Reader.File\Ceres.Gateway.Configuration.Reader.File.csproj", "{5EF29608-1F82-4335-9C34-D33954C7BB01}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ceres", "..\..\90 Src\Ceres\Ceres.csproj", "{7AB0E318-208E-4738-BB24-277C0799AE24}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
