@@ -90,9 +90,9 @@ namespace Ceres.Gateway.Configuration
 
                 list = new List<KeyValuePair<string, string>>();
 
-                if (this.queryStringData.ContainsKey(url))
+                if (this.queryStringData.ContainsKey(remoteCode))
                 {
-                    var items = this.queryStringData[url];
+                    var items = this.queryStringData[remoteCode];
 
                     foreach (var item in items)
                     {

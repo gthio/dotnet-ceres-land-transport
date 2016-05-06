@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
+using System.Text;
 
 namespace Ceres.Gateway
 {
@@ -10,6 +12,7 @@ namespace Ceres.Gateway
         public IEnumerable<string> DownloadString(string url,
             KeyValuePair<string, string>[] headers,
             KeyValuePair<string, string>[] queryStrings,
+            string dataToUpload,
             string pagingTag, int increment)
         {
             var index = 0;
@@ -25,7 +28,9 @@ namespace Ceres.Gateway
                 }
 
                 var stringResult = new Gateway().DownloadString(test,
-                    headers);
+                    headers,
+                    queryStrings,
+                    dataToUpload);
 
                 index += 1;
 
@@ -41,7 +46,9 @@ namespace Ceres.Gateway
         }
 
         public string DownloadString(string url,
-            KeyValuePair<string, string>[] headers)
+            KeyValuePair<string, string>[] headers,
+            KeyValuePair<string, string>[] queryStrings,
+            string dataToUpload)
         {
             using (var client = new WebClient())
             {
@@ -54,9 +61,22 @@ namespace Ceres.Gateway
                         header.Value);
                 }
 
-                var result = client.DownloadString(url);
+                foreach (var queryString in queryStrings)
+                {
+                    url += "&" + queryString.Key + "=" + queryString.Value;
+                }
 
-                return result;
+                if (!string.IsNullOrEmpty(dataToUpload))
+                {
+                    var response = client.UploadData(new Uri(url), "POST",
+                        Encoding.UTF8.GetBytes(dataToUpload));
+
+                    return client.Encoding.GetString(response);                
+                }
+                else
+                {
+                    return client.DownloadString(url);
+                }
             }
         }
     }
