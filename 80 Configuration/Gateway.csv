@@ -7,8 +7,8 @@ LTA2,URL,,http://datamall2.mytransport.sg/ltaodataservice/
 LTA2,HEADER,AccountKey,?
 LTA2,HEADER,UniqueUserID,?
 LTA2,HEADER,accept,application/json
-GOOGLE,URL,,
+GOOGLE,URL,,https://roads.googleapis.com/v1/
 GOOGLE,QUERY_STRING,key,?
-MAPBOX,URL,,
+MAPBOX,URL,,https://api.mapbox.com/matching/v4/
 MAPBOX,HEADER,Content-Type,application/json
 MAPBOX,QUERY_STRING,access_token,?
