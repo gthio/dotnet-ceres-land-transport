@@ -7,5 +7,5 @@
 91 SrcTest/*/obj/
 99 BuildOutput/*
 92 Library/
-80 Configuration/*
+80 Configuration/*.csv
 80 Configuration/*/*
