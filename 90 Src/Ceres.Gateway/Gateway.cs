@@ -35,7 +35,7 @@ namespace Ceres.Gateway
                 index += 1;
 
                 if (string.IsNullOrEmpty(stringResult) ||
-                    stringResult.Length < 25)
+                    stringResult.Length < 105)
                 {
                     break;
                 }
