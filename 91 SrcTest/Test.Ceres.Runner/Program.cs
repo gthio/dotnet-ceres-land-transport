@@ -18,7 +18,16 @@ using Ceres.Gateway.Configuration.Reader.File;
 
 namespace Test.Ceres.Runner
 {
-    class Program
+    public static class EnumerableExtensions
+    {
+        // http://stackoverflow.com/questions/3471899/how-to-convert-linq-results-to-hashset-or-hashedset
+        public static HashSet<T> ToHashSet<T>(this IEnumerable<T> source)
+        {
+            return new HashSet<T>(source);
+        }
+    }
+
+    static class Program
     {
         static void Main(string[] args)
         {
@@ -30,79 +39,72 @@ namespace Test.Ceres.Runner
 
             var gatewayConfiguration = new GatewayConfiguration(new FileConfigurationReader(fileConfigurationPath));
 
-            gatewayConfiguration.GetConnectionParameter("LTA",
-                out rootUrl,
-                out headers,
-                out queryStrings);
-
-            TestLoad(rootUrl + @"BusStopCodeSet?$skip={skip}",
-                headers,
-                queryStrings,
-                null,
-                "{skip}",
-                100);
-
-            TestLoad(rootUrl + @"SBSTInfoSet?$skip={skip}",
-                headers,
-                queryStrings,
-                null,
-                "{skip}",
-                100);
-
-            TestLoad(rootUrl + @"SMRTInfoSet?$skip={skip}",
-                headers,
-                queryStrings,
-                null,
-                "{skip}",
-                100);
-
-            TestLoad(rootUrl + @"SBSTRouteSet?$skip={skip}",
-                headers,
-                queryStrings,
-                null,
-                "{skip}",
-                100);
-
             gatewayConfiguration.GetConnectionParameter("LTA2",
                 out rootUrl,
                 out headers,
                 out queryStrings);
 
-            TestLoad(rootUrl + @"BusArrival?BusStopID=03031",
-                headers,
-                queryStrings,
-                null,
-                null,
-                -1);
+            //TestLoad(rootUrl + @"BusStops?$skip={skip}",
+            //    headers,
+            //    queryStrings,
+            //    null,
+            //    "{skip}",
+            //    50).WriteToFlatFile(new string[] { },
+            //        @"d:\BusStops2.csv");
 
-            gatewayConfiguration.GetConnectionParameter("GOOGLE",
-                out rootUrl,
-                out headers,
-                out queryStrings);
+            //TestLoad(rootUrl + @"BusServices?$skip={skip}",
+            //    headers,
+            //    queryStrings,
+            //    null,
+            //    "{skip}",
+            //    50).WriteToFlatFile(new string[] { },
+                    //@"d:\BusServices.csv");
 
-            TestLoad(rootUrl + @"snapToRoads?path=60.170880,24.942795|60.170879,24.942796|60.170877,24.942796",
-                headers,
-                queryStrings,
-                null,
-                null,
-                -1);
+            //TestLoad(rootUrl + @"BusRoutes?$skip={skip}",
+            //    headers,
+            //    queryStrings,
+            //    null,
+            //    "{skip}",
+            //    50).WriteToFlatFile(new string[] { },
+            //@"d:\BusRoutes.csv");
 
-            var test = System.IO.File.ReadAllText(@"../../test.json");
+            //TestLoad(rootUrl + @"BusArrival?BusStopID=03031",
+            //    headers,
+            //    queryStrings,
+            //    null,
+            //    null,
+            //    -1).WriteToFlatFile(new string[] {},
+            //        @"d:\03031.csv");
 
-            gatewayConfiguration.GetConnectionParameter("MAPBOX",
-                out rootUrl,
-                out headers,
-                out queryStrings);
+            //gatewayConfiguration.GetConnectionParameter("GOOGLE",
+            //    out rootUrl,
+            //    out headers,
+            //    out queryStrings);
 
-            TestLoad(rootUrl + @"mapbox.driving.json?",
-                headers,
-                queryStrings,
-                test,
-                null,
-                -1);
+            //TestLoad(rootUrl + @"snapToRoads?path=60.170880,24.942795|60.170879,24.942796|60.170877,24.942796",
+            //    headers,
+            //    queryStrings,
+            //    null,
+            //    null,
+            //    -1).WriteToFlatFile(new string[] {},
+            //        @"d:\GOOGL.csv");
+
+            //var test = System.IO.File.ReadAllText(@"../../test.json");
+
+            //gatewayConfiguration.GetConnectionParameter("MAPBOX",
+            //    out rootUrl,
+            //    out headers,
+            //    out queryStrings);
+
+            //TestLoad(rootUrl + @"mapbox.driving.json?",
+            //    headers,
+            //    queryStrings,
+            //    test,
+            //    null,
+            //    -1);
         }
 
-        static void TestLoad(string url,
+        static IEnumerable<DynamicEntity> TestLoad(string url,
             KeyValuePair<string, string>[] headers,
             KeyValuePair<string, string>[] queryStrings,
             string dataToUpload,
@@ -113,17 +115,104 @@ namespace Test.Ceres.Runner
                 queryStrings,
                 dataToUpload,
                 pagingTag,
-                100);
+                increment);
 
             foreach (var stringResult in result)
             {
-                var abc = Test(stringResult);
-
-                foreach (var item in abc)
+                foreach (var x in Parser(stringResult))
                 {
-                    var te = item.GetMember("Code");
+                    yield return x;
                 }
             }
+        }
+
+        static IEnumerable<DynamicEntity> Parser(string stringData,
+            string[] keys = null)
+        {
+            var obj = JObject.Parse(stringData);
+
+            var values = obj.DescendantsAndSelf()
+                .OfType<JProperty>()
+                .Where(p => p.Value is JValue)
+                .GroupBy(p => p.Name)
+                .ToList();
+
+            var columns = values.Select(g => g.Key)
+                .Where(x => !x.Contains("meta") && !x.Contains("uri") && !x.Contains("type"))
+                .ToArray();
+
+            // Filter JObjects that have child objects that have values.
+            var parentsWithChildren = values.SelectMany(g => g).SelectMany(v => v.AncestorsAndSelf().OfType<JObject>().Skip(1)).ToHashSet();
+
+            // Collect all data rows: for every object, go through the column titles and get the value of that property in the closest ancestor or self that has a value of that name.
+            var rows = obj
+                .Descendants()
+                .OfType<JObject>()
+                .Where(o => o.PropertyValues().OfType<JValue>().Any())
+                .Where(o => o == obj || !parentsWithChildren.Contains(o)) // Show a row for the root object + objects that have no children.
+                .Select(o => columns.Select(c => o.AncestorsAndSelf()
+                    .OfType<JObject>()
+                    .Select(parent => parent[c])
+                    .Where(v => v is JValue)
+                    .Select(v => (string)v)
+                    .FirstOrDefault())
+                    .Reverse() // Trim trailing nulls
+                    .SkipWhile(s => s == null)
+                    .Reverse());
+
+            foreach (var row in rows)
+            {
+                var entity = new DynamicEntity();
+                var data = row.ToArray();
+
+                for (var i = 0; i < columns.Length; i++)
+                {
+                    entity.SetMember(columns[i], data[i]);
+                }
+
+                yield return entity;
+            }
+        }
+
+        static string ParserA(string stringData,
+            string[] keys = null)
+        {
+            var obj = JObject.Parse(stringData);
+
+            var values = obj.DescendantsAndSelf()
+                .OfType<JProperty>()
+                .Where(p => p.Value is JValue)
+                .GroupBy(p => p.Name)
+                .ToList();
+
+            var columns = values.Select(g => g.Key)
+                .Where(x => !x.Contains("meta") && !x.Contains("uri") && !x.Contains("type"))
+                .ToArray();
+
+            // Filter JObjects that have child objects that have values.
+            var parentsWithChildren = values.SelectMany(g => g).SelectMany(v => v.AncestorsAndSelf().OfType<JObject>().Skip(1)).ToHashSet();
+
+            // Collect all data rows: for every object, go through the column titles and get the value of that property in the closest ancestor or self that has a value of that name.
+            var rows = obj
+                .Descendants()
+                .OfType<JObject>()
+                .Where(o => o.PropertyValues().OfType<JValue>().Any())
+                .Where(o => o == obj || !parentsWithChildren.Contains(o)) // Show a row for the root object + objects that have no children.
+                .Select(o => columns.Select(c => o.AncestorsAndSelf()
+                    .OfType<JObject>()
+                    .Select(parent => parent[c])
+                    .Where(v => v is JValue)
+                    .Select(v => (string)v)
+                    .FirstOrDefault())
+                    .Reverse() // Trim trailing nulls
+                    .SkipWhile(s => s == null)
+                    .Reverse());
+
+            // Convert to CSV
+            var csvRows = new[] { columns }.Concat(rows).Select(r => string.Join(",", r));
+            var csv = string.Join("\n", csvRows);
+
+            return csv;
         }
 
         static void DoTest(JToken obj)
@@ -214,7 +303,7 @@ namespace Test.Ceres.Runner
         }
 
         static IEnumerable<DynamicEntity> originalTest(string stringData,
-                    string[] keys = null)
+            string[] keys = null)
         {
             var jobject = JObject.Parse(stringData);
 
@@ -244,5 +333,113 @@ namespace Test.Ceres.Runner
                 }
             }
         }
+
+        static void WriteToFlatFile(this IEnumerable<DynamicEntity> records,
+            string[] fields,
+            string fullFileName)
+        {
+            using (var sw = new StreamWriter(fullFileName, false, Encoding.Unicode))
+            {
+                var counter = 0;
+                var headers = null as string[];
+                var withDoubleQuote = false;
+                var delimiter = '|';
+
+                foreach (var record in records)
+                {
+                    var flattened = null as string;
+
+                    if (counter == 0)
+                    {
+                        if (headers == null ||
+                            headers.Length == 0)
+                        {
+                            headers = record
+                                .GetKeys();
+                        }
+
+                        flattened = SerializeDataHeader(delimiter,
+                            headers,
+                            withDoubleQuote);
+
+                        sw.WriteLine(flattened);
+                    }
+
+                    flattened = SerializeData(record,
+                        delimiter,
+                        headers,
+                        withDoubleQuote);
+
+                    sw.WriteLine(flattened);
+
+                    counter += 1;
+                }
+            }
+        }
+
+        static string SerializeData(DynamicEntity data,
+            char delimiter,
+            string[] headers,
+            bool withDoubleQuote = false)
+        {
+            var sb = new StringBuilder();
+
+            var quote = withDoubleQuote ? @"""" : string.Empty;
+
+            for (int i = 0; i < headers.Length; i++)
+            {
+                var key = headers[i];
+                var value = data.GetMember(key);
+                var finalValue = string.Empty;
+
+                var test = value as DateTime?;
+
+                if (test != null)
+                {
+                    finalValue = ((DateTime)value).ToString("dd/MM/yyyy");
+                }
+                else if (value != null)
+                {
+                    finalValue = value.ToString().Trim();
+                }
+
+                sb.Append(quote + finalValue + quote);
+
+                //if (i < headers.Length - 1)
+                //{
+                //    sb.Append(delimiter);
+                //}
+
+                sb.Append(delimiter);
+            }
+
+            return sb.ToString();
+        }
+
+        static string SerializeDataHeader(char delimiter,
+            string[] headers,
+            bool withDoubleQuote = false)
+        {
+            var sb = new StringBuilder();
+            var quote = withDoubleQuote ? @"""" : string.Empty;
+
+            for (int i = 0; i < headers.Length; i++)
+            {
+                var key = headers[i];
+
+                if (i < headers.Length - 1)
+                {
+                    sb.Append(quote + key + quote);
+                    sb.Append(delimiter);
+                }
+                else
+                {
+                    sb.Append(quote + key + quote);
+                }
+            }
+
+            return sb.ToString();
+        }
     }
+
 }

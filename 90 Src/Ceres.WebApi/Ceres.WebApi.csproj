@@ -107,6 +107,7 @@
     </Compile>
     <Compile Include="Models\SearchCatalogueModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestOnly.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">
@@ -115,6 +116,9 @@
     <Content Include="EntLibLogging.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <EmbeddedResource Include="TestData\BusRoutes.csv" />
+    <EmbeddedResource Include="TestData\BusServices.csv" />
+    <EmbeddedResource Include="TestData\BusStops.csv" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -124,6 +128,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Ceres\Ceres.csproj">
+      <Project>{7ab0e318-208e-4738-bb24-277c0799ae24}</Project>
+      <Name>Ceres</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

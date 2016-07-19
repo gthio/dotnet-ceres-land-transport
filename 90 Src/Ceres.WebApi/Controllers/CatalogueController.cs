@@ -20,6 +20,7 @@ namespace Ceres.WebApi.Controllers
         // GET api/values
         public IEnumerable<string> Get()
         {
+            var test = MySingleton.Instance.BusStops;
             return new string[] { "value1", "value2" };
         }
     }
