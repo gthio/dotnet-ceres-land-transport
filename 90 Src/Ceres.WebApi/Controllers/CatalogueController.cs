@@ -18,10 +18,19 @@ namespace Ceres.WebApi.Controllers
         }
 
         // GET api/values
-        public IEnumerable<string> Get()
+        public IEnumerable<DynamicEntity> Get()
         {
-            var test = MySingleton.Instance.BusStops;
-            return new string[] { "value1", "value2" };
+            return MySingleton.Instance.BusStops
+                .Select(x =>
+                {
+                    var s = new DynamicEntity();
+
+                    s.SetMember("BusStopCode", x.GetMemberAsString("BusStopCode"));
+                    s.SetMember("RoadName", x.GetMemberAsString("RoadName"));
+                    s.SetMember("Description", x.GetMemberAsString("Description"));
+
+                    return s;
+                });
         }
     }
 }
