@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Text;
+using System.Xml;
+using System.Xml.Linq;
 
 using System.IO;
 
@@ -102,6 +104,28 @@ namespace Test.Ceres.Runner
             //    test,
             //    null,
             //    -1);
+
+            var xDoc = XDocument.Load(@"d:/hawkercentre.kml");
+            XNamespace ns = "http://www.opengis.net/kml/2.2";
+
+            xDoc.Descendants(ns + "Placemark")
+                .Select(p => new
+                {
+                    Name = p.Element(ns + "name").Value,
+                    Point = p.Element(ns + "Point").Element(ns + "coordinates").Value,
+                })
+                .Select(x =>
+                {
+                    var z = new DynamicEntity();
+
+                    z.SetMember("Name", x.Name);
+                    z.SetMember("Latitude", x.Point.Split(',')[1]);
+                    z.SetMember("Longitude", x.Point.Split(',')[0]);
+
+                    return z;
+                })
+                .WriteToFlatFile(new string[] {},
+                    @"d:\test.csv");
         }
 
         static IEnumerable<DynamicEntity> TestLoad(string url,
@@ -441,5 +465,4 @@ namespace Test.Ceres.Runner
             return sb.ToString();
         }
     }
-
 }

@@ -119,6 +119,8 @@
     <EmbeddedResource Include="TestData\BusRoutes.csv" />
     <EmbeddedResource Include="TestData\BusServices.csv" />
     <EmbeddedResource Include="TestData\BusStops.csv" />
+    <None Include="Properties\PublishProfiles\TEST_ONLY.pubxml" />
+    <EmbeddedResource Include="TestData\Poi.csv" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

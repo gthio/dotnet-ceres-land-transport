@@ -12,9 +12,9 @@ using System.Threading.Tasks;
 namespace Ceres.WebApi.Controllers
 {
     [RoutePrefix("api/BusStops")]
-    public class CatalogueController : ApiController
+    public class TransportController : ApiController
     {
-        public CatalogueController()
+        public TransportController()
         {
         }
 

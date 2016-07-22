@@ -16,12 +16,14 @@ namespace Ceres.WebApi
 
         static volatile MySingleton instance;
 
+        List<DynamicEntity> pois = new List<DynamicEntity>();
         List<DynamicEntity> busStops = new List<DynamicEntity>();
         List<DynamicEntity> busServices = new List<DynamicEntity>();
         Dictionary<Tuple<string, string>, List<DynamicEntity>> busRoutes = new Dictionary<Tuple<string, string>, List<DynamicEntity>>();
 
         private MySingleton()
         {
+            this.pois = ReadData("TestData.Poi.csv");
             this.busStops = ReadData("TestData.BusStops.csv");
             this.busServices = ReadData("TestData.BusServices.csv");
 
@@ -79,6 +81,14 @@ namespace Ceres.WebApi
             const string resourceFileName = "TestData.BusStops.csv";
 
             return ReadData(resourceFileName);
+        }
+
+        public List<DynamicEntity> Pois
+        {
+            get
+            {
+                return this.pois;
+            }
         }
 
         private List<DynamicEntity> ReadData(string resourceName)
