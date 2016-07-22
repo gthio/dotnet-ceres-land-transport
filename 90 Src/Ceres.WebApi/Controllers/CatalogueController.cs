@@ -40,7 +40,7 @@ namespace Ceres.WebApi.Controllers
         public IEnumerable<DynamicEntity> ListByRoadName(string roadName)
         {
             return MySingleton.Instance.BusStops
-                .Where(x => x.GetMemberAsString("RoadName").Contains(roadName))
+                .Where(x => x.GetMemberAsString("RoadName").IndexOf(roadName, StringComparison.OrdinalIgnoreCase) >= 0)
                 .Select(x =>
                 {
                     var s = new DynamicEntity();
@@ -58,7 +58,7 @@ namespace Ceres.WebApi.Controllers
         public IEnumerable<DynamicEntity> ListByRoadDescription(string roadDescription)
         {
             return MySingleton.Instance.BusStops
-                .Where(x => x.GetMemberAsString("Description").Contains(roadDescription))
+                .Where(x => x.GetMemberAsString("Description").IndexOf(roadDescription, StringComparison.OrdinalIgnoreCase) >= 0)
                 .Select(x =>
                 {
                     var s = new DynamicEntity();
@@ -73,11 +73,33 @@ namespace Ceres.WebApi.Controllers
 
         [HttpGet]
         [Route("Search")]
-        public IEnumerable<DynamicEntity> ListByGeo(decimal latitude, 
-            decimal longitude, 
-            decimal? radius = 1)
+        public IEnumerable<DynamicEntity> ListByGeo(double latitude, 
+            double longitude, 
+            double? radius = 1)
         {
-            return new List<DynamicEntity>();
+            var test = new List<DynamicEntity>();
+
+            foreach (var poi in MySingleton.Instance.BusStops)
+            {
+                var lat = Convert.ToDouble(poi.GetMember("Latitude"));
+                var lon = Convert.ToDouble(poi.GetMember("Longitude"));
+
+                var distance = ComputeDistance(latitude, longitude, lat, lon, 'K');
+
+                if (distance <= radius)
+                {
+                    distance = Math.Round(distance, 2);
+
+                    var entity = new DynamicEntity();
+                    entity.SetMember("Location", poi.GetMemberAsString("RoadName") + " - " + poi.GetMemberAsString("Description"));
+                    entity.SetMember("Distance", distance);
+
+                    test.Add(entity);
+                }
+            }
+
+            return test
+                .OrderBy(x => Convert.ToDouble(x.GetMember("Distance")));
         }
 
         [HttpGet]
@@ -101,6 +123,34 @@ namespace Ceres.WebApi.Controllers
             }
 
             return null;
+        }
+
+        private static double ComputeDistance(double lat1, double lon1, double lat2, double lon2, char unit)
+        {
+            double theta = lon1 - lon2;
+            double dist = Math.Sin(deg2rad(lat1)) * Math.Sin(deg2rad(lat2)) + Math.Cos(deg2rad(lat1)) * Math.Cos(deg2rad(lat2)) * Math.Cos(deg2rad(theta));
+            dist = Math.Acos(dist);
+            dist = rad2deg(dist);
+            dist = dist * 60 * 1.1515;
+            if (unit == 'K')
+            {
+                dist = dist * 1.609344;
+            }
+            else if (unit == 'N')
+            {
+                dist = dist * 0.8684;
+            }
+            return (dist);
+        }
+
+        private static double deg2rad(double deg)
+        {
+            return (deg * Math.PI / 180.0);
+        }
+
+        private static double rad2deg(double rad)
+        {
+            return (rad / Math.PI * 180.0);
         }
     }
 }
