@@ -8,6 +8,7 @@ using System.Web;
 
 using Ceres;
 
+//TestOnly
 namespace Ceres.WebApi
 {
     public class MySingleton
