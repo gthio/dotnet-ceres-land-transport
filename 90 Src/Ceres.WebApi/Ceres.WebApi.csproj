@@ -99,7 +99,7 @@
     <Compile Include="App_Start\UnityConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Bootstrapper.cs" />
-    <Compile Include="Controllers\ValuesController.cs" />
+    <Compile Include="Controllers\PoiController.cs" />
     <Compile Include="Controllers\CatalogueController.cs" />
     <Compile Include="DynamicJavaScriptConverter.cs" />
     <Compile Include="Global.asax.cs">
