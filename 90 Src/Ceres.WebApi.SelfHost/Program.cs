@@ -20,15 +20,6 @@ namespace Ceres.WebApi.SelfHost
 {
     public class WebAPILoader : DefaultAssembliesResolver
     {
-        //public override ICollection<Assembly> GetAssemblies()
-        //{
-        //    ICollection<Assembly> defaultAssemblies = base.GetAssemblies();
-        //    List<Assembly> assemblies = new List<Assembly>(defaultAssemblies);
-        //    Type t = typeof(Ceres.WebApi.Controllers.ValuesController);
-        //    Assembly a = t.Assembly;
-        //    defaultAssemblies.Add(a);
-        //    return assemblies;
-        //}
     }
 
     class Program
