@@ -99,12 +99,13 @@
     <Compile Include="App_Start\UnityConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Bootstrapper.cs" />
-    <Compile Include="Controllers\ValuesController.cs" />
+    <Compile Include="Controllers\PoiController.cs" />
     <Compile Include="Controllers\CatalogueController.cs" />
     <Compile Include="DynamicJavaScriptConverter.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helper.cs" />
     <Compile Include="Models\SearchCatalogueModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestOnly.cs" />
@@ -121,6 +122,15 @@
     <EmbeddedResource Include="TestData\BusStops.csv" />
     <None Include="Properties\PublishProfiles\TEST_ONLY.pubxml" />
     <EmbeddedResource Include="TestData\Poi.csv" />
+    <EmbeddedResource Include="TestData\aquaticsg.csv" />
+    <EmbeddedResource Include="TestData\hotels.csv" />
+    <EmbeddedResource Include="TestData\libraries.csv" />
+    <EmbeddedResource Include="TestData\museum.csv" />
+    <EmbeddedResource Include="TestData\nationalparks.csv" />
+    <EmbeddedResource Include="TestData\pcnaccesspoints.csv" />
+    <EmbeddedResource Include="TestData\relaxsg.csv" />
+    <EmbeddedResource Include="TestData\streetsandplaces.csv" />
+    <EmbeddedResource Include="TestData\tourism.csv" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

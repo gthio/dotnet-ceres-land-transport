@@ -17,14 +17,19 @@ namespace Ceres.WebApi
 
         static volatile MySingleton instance;
 
-        List<DynamicEntity> pois = new List<DynamicEntity>();
+        Dictionary<string, List<DynamicEntity>> pois = new Dictionary<string, List<DynamicEntity>>();
         List<DynamicEntity> busStops = new List<DynamicEntity>();
         List<DynamicEntity> busServices = new List<DynamicEntity>();
         Dictionary<Tuple<string, string>, List<DynamicEntity>> busRoutes = new Dictionary<Tuple<string, string>, List<DynamicEntity>>();
 
         private MySingleton()
         {
-            this.pois = ReadData("TestData.Poi.csv");
+            pois.Add("hotels", ReadData("TestData.hotels.csv"));
+            pois.Add("libraries", ReadData("TestData.libraries.csv"));
+            pois.Add("museum", ReadData("TestData.museum.csv"));
+            pois.Add("nationalParks", ReadData("TestData.nationalparks.csv"));
+            pois.Add("hawker", ReadData("TestData.Poi.csv"));
+
             this.busStops = ReadData("TestData.BusStops.csv");
             this.busServices = ReadData("TestData.BusServices.csv");
 
@@ -84,12 +89,18 @@ namespace Ceres.WebApi
             return ReadData(resourceFileName);
         }
 
-        public List<DynamicEntity> Pois
+        public List<DynamicEntity> GetPois(string type)
         {
-            get
+            if (string.IsNullOrEmpty(type))
             {
-                return this.pois;
+                return this.pois.Values.SelectMany(x => x).ToList();
             }
+            if (this.pois.ContainsKey(type))
+            {
+                return this.pois[type];
+            }
+
+            return null;
         }
 
         private List<DynamicEntity> ReadData(string resourceName)
